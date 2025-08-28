@@ -1,23 +1,27 @@
 import { useState } from "react";
-import "./Item.css"
+import { useTaskContext } from "../context/TaskContext";
 
-export default function Item({ title, status, id, time, toggleStatus, dellTask, editTask }) {
-    
-    const [editing, setEditing] = useState(false)
-    const [value, setValue] = useState(title)
+
+export default function Item({ title, status, id, time }) {
+    const { editTask, toggleStatus, dellTask } = useTaskContext();
+    const [editing, setEditing] = useState(false);
+    const [editValue, setEditValue] = useState(title);
 
     const handleSave = () => {
-        if (value.trim() !== "") {
-            editTask(id, value)
-            setEditing(false)
+        if (editValue.trim() !== "") {
+            editTask(id, editValue);
+            setEditing(false);
         }
-    }
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            handleSave()
+            handleSave();
+        } else if (e.key === "Escape") {
+            setEditValue(title);
+            setEditing(false);
         }
-    }
+    };
 
     return (
         <li className={status ? "todo done" : "todo"}>
@@ -30,25 +34,32 @@ export default function Item({ title, status, id, time, toggleStatus, dellTask, 
             {editing ? (
                 <input 
                     type="text" 
-                    value={value} 
-                    onChange={(e) => setValue(e.target.value)} 
-                    onBlur={handleSave}
-                    autoFocus 
-                    onKeyDown={handleKeyDown} 
+                    value={editValue} 
+                    onChange={(e) => setEditValue(e.target.value)} 
+                    onKeyDown={handleKeyDown}
+                    autoFocus
                 />
             ) : (
-                <span onDoubleClick={()=>setEditing(true)}>{value}</span>
+                <span onDoubleClick={() => setEditing(true)}>{title}</span>
             )}
             
             <small>{time}</small>
             
-            {editing ? (
-                <i onClick={handleSave}>💾</i>
-            ) : (
-                <i onClick={() => setEditing(true)}>Редагувати</i>
-            )}
-            
-            <i className="delete" onClick={() => dellTask(id)}>X</i>
+            <div className="todo-actions">
+                {editing ? (
+                    <button className="todo-btn save" onClick={handleSave}>
+                        💾
+                    </button>
+                ) : (
+                    <button className="todo-btn edit" onClick={() => setEditing(true)}>
+                        ✏️
+                    </button>
+                )}
+                
+                <button className="todo-btn delete" onClick={() => dellTask(id)}>
+                    🗑️
+                </button>
+            </div>
         </li>
     );
 }

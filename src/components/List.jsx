@@ -1,11 +1,13 @@
 import './List.css'
 import Item from './Item';
+import { useTaskContext } from '../context/TaskContext';
 
-export default function List({ tasks,toggleStatus,dellTask,editTask}) {
+export default function List() {
+    const {tasks} = useTaskContext()
     return (
         <ul>
             {tasks.map(el =>
-                <Item key={el.id} {...el} toggleStatus={toggleStatus} dellTask={dellTask} editTask={editTask}/>
+                <Item key={el.id} {...el}/>
             )}
         </ul>
     );
