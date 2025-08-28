@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import List from './components/List';
+import List from './components/List/List';
 import './App.css';
 import { useTaskContext } from './context/TaskContext';
 import { useThemeContext } from './context/ThemeContext';
